@@ -1,0 +1,9 @@
+{
+  "name": "events",
+  "module": "index.ts",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "puppeteer": "^24.10.2"
+  }
+}
