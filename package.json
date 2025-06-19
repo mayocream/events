@@ -1,18 +1,17 @@
 {
   "name": "@mayocream/events",
-  "type": "module",
   "version": "0.1.0",
-  "description": "",
+  "author": "Mayo <mayo@linux.com>",
   "main": "index.js",
+  "devDependencies": {
+    "@googlemaps/google-maps-services-js": "^3.4.1",
+    "puppeteer-core": "^24.10.2"
+  },
+  "description": "",
+  "keywords": [],
+  "license": "Apache-2.0",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "@googlemaps/google-maps-services-js": "^3.4.0",
-    "dotenv": "^16.4.7",
-    "puppeteer": "^23.11.1"
-  }
+  "type": "module"
 }

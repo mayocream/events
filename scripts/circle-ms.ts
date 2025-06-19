@@ -1,6 +1,5 @@
-import 'dotenv/config'
 import assert from 'node:assert'
-import puppeteer from 'puppeteer'
+import puppeteer from 'puppeteer-core'
 import { Client } from '@googlemaps/google-maps-services-js'
 
 const browser = await puppeteer.launch({ headless: false })
