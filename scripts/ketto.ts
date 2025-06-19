@@ -36,22 +36,35 @@ async function main() {
       // Extract location - look for text patterns and links
       let location = ''
       const locationPatterns = [
-        /東京:(.*?)(?=<|$)/,
-        /大阪:(.*?)(?=<|$)/,
-        /関東:(.*?)(?=<|$)/,
-        /近畿:(.*?)(?=<|$)/,
-        /東海:(.*?)(?=<|$)/,
-        /九州:(.*?)(?=<|$)/,
-        /北海道:(.*?)(?=<|$)/,
-        /東北:(.*?)(?=<|$)/,
-        /北陸:(.*?)(?=<|$)/,
+        /東京:(.*?)(?=<BR|<br|<HR|<hr|$)/i, // ← CHANGED: Better stopping pattern
+        /大阪:(.*?)(?=<BR|<br|<HR|<hr|$)/i, // ← CHANGED: Better stopping pattern
+        /関東:(.*?)(?=<BR|<br|<HR|<hr|$)/i, // ← CHANGED: Better stopping pattern
+        /近畿:(.*?)(?=<BR|<br|<HR|<hr|$)/i, // ← CHANGED: Better stopping pattern
+        /東海:(.*?)(?=<BR|<br|<HR|<hr|$)/i, // ← CHANGED: Better stopping pattern
+        /九州:(.*?)(?=<BR|<br|<HR|<hr|$)/i, // ← CHANGED: Better stopping pattern
+        /北海道:(.*?)(?=<BR|<br|<HR|<hr|$)/i, // ← CHANGED: Better stopping pattern
+        /東北:(.*?)(?=<BR|<br|<HR|<hr|$)/i, // ← CHANGED: Better stopping pattern
+        /北陸:(.*?)(?=<BR|<br|<HR|<hr|$)/i, // ← CHANGED: Better stopping pattern
       ]
 
       for (const pattern of locationPatterns) {
         const match = block.match(pattern)
         if (match) {
-          // Clean up HTML tags and get venue name
-          location = match[1].replace(/<[^>]*>/g, '').trim()
+          // Extract text from links and clean up HTML tags    // ← CHANGED: Updated comment
+          let locationText = match[1] // ← NEW: Store raw text
+
+          // First extract text from any <a> tags              // ← NEW: Link extraction logic
+          const linkMatches = locationText.match(/<a[^>]*>([^<]+)<\/a>/gi)
+          if (linkMatches) {
+            // Get text content from the first link found
+            const linkTextMatch = linkMatches[0].match(/>([^<]+)</i)
+            if (linkTextMatch) {
+              locationText = linkTextMatch[1]
+            }
+          }
+
+          // Clean up remaining HTML tags and whitespace       // ← CHANGED: Updated comment
+          location = locationText.replace(/<[^>]*>/g, '').trim() // ← CHANGED: Use processed text
           break
         }
       }
@@ -72,7 +85,6 @@ async function main() {
           !href.includes('x.com')
         ) {
           eventUrl = href
-          break
         }
       }
 
@@ -115,6 +127,9 @@ async function main() {
       .replace(/\s+/g, '_')
 
     const filePath = `2025/${fileName}.json`
+
+    if (fs.existsSync(filePath)) return
+
     fs.writeFileSync(filePath, JSON.stringify(event, null, 2))
   })
 }
